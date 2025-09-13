@@ -24,7 +24,6 @@ export default function RootLayout({
       <body
         className={`${robotoFlex.variable} antialiased`}
       >
-        <div className="font-black-slanted">Hey you guys</div>
         {children}
       </body>
     </html>
