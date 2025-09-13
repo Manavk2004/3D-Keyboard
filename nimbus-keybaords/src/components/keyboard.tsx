@@ -313,9 +313,54 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
     keycapTexture.flipY = false
     keycapTexture.colorSpace = THREE.SRGBColorSpace
 
+    const knurlTexture = useTexture("/Knurl.jpg")
+    keycapTexture.flipY = false
+
+    knurlTexture.repeat.set(6,6)
+    knurlTexture.wrapS = THREE.RepeatWrapping
+    knurlTexture.wrapT = THREE.RepeatWrapping
+
+    const screenTexture = useTexture("screen_uv.png")
+    screenTexture.flipY = false
+
+    screenTexture.repeat.set(-1, -1)
+    screenTexture.offset.set(1,1)
+
+
     const keycapMat = new THREE.MeshStandardMaterial({
         roughness: .7,
         map: keycapTexture
+    })
+
+    const knobMat = new THREE.MeshStandardMaterial({
+        color: '#e24818',
+        roughness: 0.4,
+        metalness: 1,
+        bumpMap: knurlTexture,
+        bumpScale: .8
+    })
+
+
+
+
+    const screenMat = new THREE.MeshStandardMaterial({
+        map: screenTexture,
+        roughness: 0.4
+    })
+
+    const plateMat = new THREE.MeshStandardMaterial({
+        color: '#888888',
+        roughness: 0.4
+    })
+
+    const bottomCaseMat = new THREE.MeshStandardMaterial({
+        color: '#1e548a',
+        roughness: 0.4
+    })
+
+    const topCaseMat = new THREE.MeshStandardMaterial({
+        color: '#dddddd',
+        roughness: 0.7
     })
 
     const switchMat = new THREE.MeshStandardMaterial({
@@ -324,15 +369,20 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
     });
 
     const switchStemMat = new THREE.MeshStandardMaterial({
-      color: "#cccccc",
+      color: "#bb2222",
       roughness: 0.4,
     });
 
     const switchContactsMat = new THREE.MeshStandardMaterial({
-      color: "#cccccc",
+      color: "#ffcf5f",
       roughness: 0.1,
       metalness: 1,
     });
+
+    const feetMat = new THREE.MeshStandardMaterial({
+        color: '#333333',
+        roughness: 0.4
+    })
 
     return (
       <group {...props} dispose={null} ref={containerRef}>
@@ -342,7 +392,7 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
             castShadow
             receiveShadow
             geometry={nodes.Plate.geometry}
-            material={keycapMat}
+            material={plateMat}
             position={[-0.022, -0.006, -0.057]}
           />
           <mesh
@@ -350,14 +400,14 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
             castShadow
             receiveShadow
             geometry={nodes.Knob.geometry}
-            material={keycapMat}
+            material={knobMat}
             position={[0.121, 0.004, -0.106]}
           />
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.PCB.geometry}
-            material={keycapMat}
+            material={plateMat}
             position={[-0.022, -0.009, -0.057]}
           />
 
@@ -626,13 +676,13 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
               castShadow
               receiveShadow
               geometry={nodes.Cube005.geometry}
-              material={keycapMat}
+              material={bottomCaseMat}
             />
             <mesh
               castShadow
               receiveShadow
               geometry={nodes.Cube005_1.geometry}
-              material={keycapMat}
+              material={feetMat}
             />
           </group>
           <mesh
@@ -640,7 +690,7 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
             castShadow
             receiveShadow
             geometry={nodes.Top_Case.geometry}
-            material={keycapMat}
+            material={topCaseMat}
             position={[-0.022, -0.014, -0.057]}
           />
           <mesh
@@ -656,7 +706,7 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
             castShadow
             receiveShadow
             geometry={nodes.Screen.geometry}
-            material={keycapMat}
+            material={screenMat}
             position={[0.092, 0.001, -0.106]}
             scale={-1}
           />

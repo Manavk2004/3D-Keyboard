@@ -8,14 +8,14 @@ import { useControls } from 'leva'
 import React, { useContext } from 'react'
 
 function Scene() {
-    const {positionX, positionY, positionZ, rotationX, rotationY, rotationZ} = useControls({
-        positionX: 0, 
-        positionY: -.5, 
-        positionZ: 3,
-        rotationX: 0, 
-        rotationY: -.5,
-        rotationZ: 3
-    })
+    // const {positionX, positionY, positionZ, rotationX, rotationY, rotationZ} = useControls({
+    //     positionX: 0, 
+    //     positionY: -.5, 
+    //     positionZ: 3,
+    //     rotationX: 0, 
+    //     rotationY: -.5,
+    //     rotationZ: 3
+    // })
 
   return (
     <group>
