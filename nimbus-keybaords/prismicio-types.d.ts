@@ -69,7 +69,7 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type HomepageDocumentDataSlicesSlice = HeroSlice;
+type HomepageDocumentDataSlicesSlice = BentoBoxSlice | HeroSlice;
 
 /**
  * Content for Homepage documents
@@ -135,6 +135,36 @@ export type HomepageDocument<Lang extends string = string> =
   >;
 
 export type AllDocumentTypes = HomepageDocument;
+
+/**
+ * Default variation for BentoBox Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type BentoBoxSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Record<string, never>,
+  never
+>;
+
+/**
+ * Slice variation for *BentoBox*
+ */
+type BentoBoxSliceVariation = BentoBoxSliceDefault;
+
+/**
+ * BentoBox Shared Slice
+ *
+ * - **API ID**: `bento_box`
+ * - **Description**: BentoBox
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type BentoBoxSlice = prismic.SharedSlice<
+  "bento_box",
+  BentoBoxSliceVariation
+>;
 
 /**
  * Primary content in *Hero → Default → Primary*
@@ -223,6 +253,9 @@ declare module "@prismicio/client" {
       HomepageDocumentData,
       HomepageDocumentDataSlicesSlice,
       AllDocumentTypes,
+      BentoBoxSlice,
+      BentoBoxSliceVariation,
+      BentoBoxSliceDefault,
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceVariation,

@@ -1,0 +1,18 @@
+{
+  "id": "bento_box",
+  "type": "SharedSlice",
+  "name": "BentoBox",
+  "description": "BentoBox",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {},
+      "items": {}
+    }
+  ]
+}

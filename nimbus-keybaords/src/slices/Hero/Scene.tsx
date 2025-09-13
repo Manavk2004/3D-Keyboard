@@ -5,7 +5,7 @@ import { Keyboard } from '@/components/keyboard'
 import { Keycap } from '@/components/Keycap'
 import { Environment, OrbitControls, PerspectiveCamera} from '@react-three/drei'
 import { useControls } from 'leva'
-import React, { useContext } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 
 function Scene() {
     // const {positionX, positionY, positionZ, rotationX, rotationY, rotationZ} = useControls({
@@ -17,6 +17,18 @@ function Scene() {
     //     rotationZ: 3
     // })
 
+    let [scalingFactor, setScalingFactor] = useState(1)
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScalingFactor(window.innerWidth >= 500 ? 1 : .5)
+        }
+        
+
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    })
+
   return (
     <group>
         <PerspectiveCamera 
@@ -24,27 +36,29 @@ function Scene() {
             fov={50}
             makeDefault
         />
-        <Keyboard 
-            scale={9}
-            position={[0.23, -0.5, 1.8]}
-            rotation={[1.60, 0.40, 0]}
-        />
-        <ambientLight 
-            intensity={0.2}
-        />
+        <group scale={scalingFactor}>
+            <Keyboard 
+                scale={9}
+                position={[0.23, -0.5, 1.8]}
+                rotation={[1.60, 0.40, 0]}
+                />
+            <ambientLight 
+                intensity={0.1}
+                />
 
-        <group>
+            <group>
 
-            <Keycap position={[0, -0.4, 2.6]} floatSeed={0.001} texture={0}/>
-            <Keycap position={[-1.4, 0, 2.3]} floatSeed={0.002} texture={1}/>
-            <Keycap position={[-1.8, 1, 1.5]} floatSeed={0.003} texture={2}/>
-            <Keycap position={[0, 1, 1]} floatSeed={0.004} texture={3}/>
-            <Keycap position={[0.7, .9, 1.4]} floatSeed={0.005} texture={4}/>
-            <Keycap position={[1.3, -.3, 2.3]} floatSeed={0.006} texture={5}/>
-            <Keycap position={[-.7, .6, 2]} floatSeed={0.007} texture={6}/>
-            <Keycap position={[-.77, .1, 2.8]} floatSeed={0.008} texture={7}/>
-            <Keycap position={[2, 0, 1]} floatSeed={0.009} texture={8}/>
+                <Keycap position={[0, -0.4, 2.6]} floatSeed={0.001} texture={0}/>
+                <Keycap position={[-1.4, 0, 2.3]} floatSeed={0.002} texture={1}/>
+                <Keycap position={[-1.8, 1, 1.5]} floatSeed={0.003} texture={2}/>
+                <Keycap position={[0, 1, 1]} floatSeed={0.004} texture={3}/>
+                <Keycap position={[0.7, .9, 1.4]} floatSeed={0.005} texture={4}/>
+                <Keycap position={[1.3, -.3, 2.3]} floatSeed={0.006} texture={5}/>
+                <Keycap position={[-.7, .6, 2]} floatSeed={0.007} texture={6}/>
+                <Keycap position={[-.77, .1, 2.8]} floatSeed={0.008} texture={7}/>
+                <Keycap position={[2, 0, 1]} floatSeed={0.009} texture={8}/>
 
+            </group>
         </group>
 
         <Environment
