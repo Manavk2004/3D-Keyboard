@@ -37,7 +37,8 @@ export function Keycap({ position=[0,0,0], rotation=[0,0,0], floatSeed=0, textur
     const uvTexture = textures[texture]
 
     const keycapTexture = useTexture(uvTexture)
-    keycapTexture.flipY = false
+    keycapTexture.flipY = false;
+    keycapTexture.colorSpace = THREE.SRGBColorSpace
 
     useFrame(() => {
         if(group.current){
