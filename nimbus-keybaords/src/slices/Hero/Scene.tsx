@@ -35,15 +35,15 @@ function Scene() {
 
         <group>
 
-            <Keycap position={[0, -0.4, 2.6]} floatSeed={0.001}/>
-            <Keycap position={[-1.4, 0, 2.3]} floatSeed={0.002}/>
-            <Keycap position={[-1.8, 1, 1.5]} floatSeed={0.003}/>
-            <Keycap position={[0, 1, 1]} floatSeed={0.004}/>
-            <Keycap position={[0.7, .9, 1.4]} floatSeed={0.005}/>
-            <Keycap position={[1.3, -.3, 2.3]} floatSeed={0.006}/>
-            <Keycap position={[-.7, .6, 2]} floatSeed={0.007}/>
-            <Keycap position={[-.77, .1, 2.8]} floatSeed={0.008}/>
-            <Keycap position={[2, 0, 1]} floatSeed={0.009}/>
+            <Keycap position={[0, -0.4, 2.6]} floatSeed={0.001} texture={0}/>
+            <Keycap position={[-1.4, 0, 2.3]} floatSeed={0.002} texture={1}/>
+            <Keycap position={[-1.8, 1, 1.5]} floatSeed={0.003} texture={2}/>
+            <Keycap position={[0, 1, 1]} floatSeed={0.004} texture={3}/>
+            <Keycap position={[0.7, .9, 1.4]} floatSeed={0.005} texture={4}/>
+            <Keycap position={[1.3, -.3, 2.3]} floatSeed={0.006} texture={5}/>
+            <Keycap position={[-.7, .6, 2]} floatSeed={0.007} texture={6}/>
+            <Keycap position={[-.77, .1, 2.8]} floatSeed={0.008} texture={7}/>
+            <Keycap position={[2, 0, 1]} floatSeed={0.009} texture={8}/>
 
         </group>
 
