@@ -69,7 +69,10 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type HomepageDocumentDataSlicesSlice = BentoBoxSlice | HeroSlice;
+type HomepageDocumentDataSlicesSlice =
+  | ColorchangerSlice
+  | BentoBoxSlice
+  | HeroSlice;
 
 /**
  * Content for Homepage documents
@@ -227,6 +230,61 @@ export type BentoBoxSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *Colorchanger → Default → Primary*
+ */
+export interface ColorchangerSliceDefaultPrimary {
+  /**
+   * Heading field in *Colorchanger → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: colorchanger.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *Colorchanger → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: colorchanger.default.primary.des
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  des: prismic.RichTextField;
+}
+
+/**
+ * Default variation for Colorchanger Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ColorchangerSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ColorchangerSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Colorchanger*
+ */
+type ColorchangerSliceVariation = ColorchangerSliceDefault;
+
+/**
+ * Colorchanger Shared Slice
+ *
+ * - **API ID**: `colorchanger`
+ * - **Description**: Colorchanger
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ColorchangerSlice = prismic.SharedSlice<
+  "colorchanger",
+  ColorchangerSliceVariation
+>;
+
+/**
  * Primary content in *Hero → Default → Primary*
  */
 export interface HeroSliceDefaultPrimary {
@@ -318,6 +376,10 @@ declare module "@prismicio/client" {
       BentoBoxSliceDefaultPrimary,
       BentoBoxSliceVariation,
       BentoBoxSliceDefault,
+      ColorchangerSlice,
+      ColorchangerSliceDefaultPrimary,
+      ColorchangerSliceVariation,
+      ColorchangerSliceDefault,
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceVariation,

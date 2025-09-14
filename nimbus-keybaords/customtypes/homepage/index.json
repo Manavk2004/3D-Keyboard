@@ -11,6 +11,9 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
+            "colorchanger": {
+              "type": "SharedSlice"
+            },
             "bento_box": {
               "type": "SharedSlice"
             },
