@@ -335,7 +335,7 @@ export const Keyboard = forwardRef<KeyboardRefs, KeyboardProps>(
     const keycapMat = keycapMaterial || defaultKeycapMat
 
     const knobMat = new THREE.MeshStandardMaterial({
-        color: '#e24818',
+        color: knobColor || '#e24818',
         roughness: 0.4,
         metalness: 1,
         bumpMap: knurlTexture,
