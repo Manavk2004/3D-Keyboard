@@ -84,6 +84,7 @@ const Colorchanger: FC<ColorchangerProps> = ({ slice }) => {
     >
       <Canvas
         camera={{position: [0, .5, .5], fov:45, zoom:1.5}}
+        className="-mb-[10vh] grow"
       >
         <Scene  selectedTextureId={selectedTextureId} onAnimationComplete={handleAnimationComplete}/>
       </Canvas>

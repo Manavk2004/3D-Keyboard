@@ -1,6 +1,8 @@
 import { Keyboard } from "@/components/keyboard";
-import { Stage } from "@react-three/drei";
-
+import { Stage, useTexture } from "@react-three/drei";
+import { KEYCAP_TEXTURES } from ".";
+import { useMemo } from "react";
+import * as THREE from "three"
 
 type SceneProps = {
     selectedTextureId: string;
@@ -9,10 +11,35 @@ type SceneProps = {
 
 
 export function Scene({ selectedTextureId, onAnimationComplete}: SceneProps){
+
+    const texturePaths = KEYCAP_TEXTURES.map((texture) => texture.path)
+    const textures = useTexture(texturePaths)
+
+    const materials = useMemo(() => {
+        const materialMap: {[key: string]: THREE.MeshStandardMaterial} = {};
+
+        KEYCAP_TEXTURES.forEach((textureConfig, index) => {
+            const texture = Array.isArray(textures) ? textures[index] : textures
+
+            if (texture) {
+                texture.flipY = false
+                texture.colorSpace = THREE.SRGBColorSpace
+
+                materialMap[textureConfig.id] = new THREE.MeshStandardMaterial({
+                    map: texture,
+                    roughness: .7
+                })
+
+            }
+        })
+
+        return materialMap
+    }, [textures])
+
     return(
-        <Stage environment={"city"} intensity={0.01}>
+        <Stage environment={"city"} intensity={0.01} shadows="contact">
             <group>
-                <Keyboard />
+                <Keyboard keycapMaterial={materials[selectedTextureId]}/>
             </group>
         </Stage>
     )
