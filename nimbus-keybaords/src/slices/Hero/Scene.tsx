@@ -5,19 +5,74 @@ import { Keyboard } from '@/components/keyboard'
 import { Keycap } from '@/components/Keycap'
 import { Environment, OrbitControls, PerspectiveCamera} from '@react-three/drei'
 import { useControls } from 'leva'
-import React, { useContext, useRef, useState, useEffect } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react';
+import * as THREE from "three"
+import gsap from "gsap"
+import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 function Scene() {
-    // const {positionX, positionY, positionZ, rotationX, rotationY, rotationZ} = useControls({
-    //     positionX: 0, 
-    //     positionY: -.5, 
-    //     positionZ: 3,
-    //     rotationX: 0, 
-    //     rotationY: -.5,
-    //     rotationZ: 3
-    // })
+    const keyboardGroupRef = useRef<THREE.Group>(null)
+    const [lightIntensityScaler, setLightIntensityScaler] = useState(0)
+
+
 
     let [scalingFactor, setScalingFactor] = useState(1)
+
+
+
+    useGSAP(() => {
+        const mm = gsap.matchMedia()
+        
+        mm.add("(prefers-reduced-motion: no-preference", () => {
+            if(!keyboardGroupRef.current) return
+
+            const keyboard = keyboardGroupRef.current
+
+            gsap.to(
+                {lightIntensityScaler: 0},
+                {lightIntensityScaler: 1,
+                    duration: 3.5,
+                    delay: .5,
+                    ease: "power2.inOut",
+                    onUpdate: function(){
+                        setLightIntensityScaler(this.targets()[0].lightIntensityScaler)
+                    }
+                }
+            )
+
+
+            const tl = gsap.timeline({
+                ease: "power2.inOut"
+            })
+
+            tl.to(keyboard.position, {
+                x: 0,
+                y: -.5,
+                z: .5,
+                duration: 2
+            }).to(keyboard.rotation, {
+                x: 1.4,
+                y: 0,
+                z: 0,
+                duration: 1.8
+            }, "<")
+            .to(keyboard.position, {
+                x: 0,
+                y: -0.5,
+                z: 1.9,
+                duratiom: 2,
+                delay: 0.5
+            }).to(keyboard.rotation, {
+                x: 1.6,
+                y: 0.4,
+                z: 0,
+                duration: 2
+            }, "<")
+        })
+    })
 
     useEffect(() => {
         const handleResize = () => {
@@ -37,11 +92,11 @@ function Scene() {
             makeDefault
         />
         <group scale={scalingFactor}>
-            <Keyboard 
-                scale={9}
-                position={[0.23, -0.5, 1.8]}
-                rotation={[1.60, 0.40, 0]}
+            <group ref={keyboardGroupRef} >
+                <Keyboard 
+                    scale={9}
                 />
+            </group>
             <ambientLight 
                 intensity={0.1}
                 />
@@ -62,12 +117,12 @@ function Scene() {
         </group>
 
         <Environment
-            environmentIntensity={.05}
+            environmentIntensity={.05 * lightIntensityScaler}
             files={["/hdr/blue-studio.hdr"]}
         />
         <spotLight 
             position={[-2, 1.5, 3]}
-            intensity={30}
+            intensity={30 * lightIntensityScaler}
             castShadow
             shadow-bias={-0.0002}
             shadow-normalBias={.002}
