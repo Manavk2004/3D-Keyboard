@@ -1,6 +1,9 @@
 import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import { Content, isFilled } from "@prismicio/client";
+import { PrismicRichText, PrismicText, SliceComponentProps } from "@prismicio/react";
+import { Bounded } from "@/components/bounded";
+import { FadeIn } from "@/components/FadeIn";
+import clsx from "clsx";
 
 /**
  * Props for `SwitchPlayground`.
@@ -13,42 +16,82 @@ export type SwitchPlaygroundProps =
  */
 const SwitchPlayground: FC<SwitchPlaygroundProps> = ({ slice }) => {
   return (
-    <section
+    <Bounded
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
+      className="relative"
+      innerClassName="flex flex-col justify-center"
     >
-      Placeholder component for switch_playground (variation: {slice.variation})
-      slices.
-      <br />
-      <strong>You can edit this slice directly in your code editor.</strong>
-      {/**
-       * 💡 Use Prismic MCP with your code editor
-       *
-       * Get AI-powered help to build your slice components — based on your actual model.
-       *
-       * ▶️ Setup:
-       * 1. Add a new MCP Server in your code editor:
-       *
-       * {
-       *   "mcpServers": {
-       *     "Prismic MCP": {
-       *       "command": "npx",
-       *       "args": ["-y", "@prismicio/mcp-server@latest"]
-       *     }
-       *   }
-       * }
-       *
-       * 2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
-       *
-       * ✅ Then open your slice file and ask your code editor:
-       *    "Code this slice"
-       *
-       * Your code editor reads your slice model and helps you code faster ⚡
-       * 🎙️ Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
-       * 📚 Documentation: https://prismic.io/docs/ai#code-with-prismics-mcp-server
-       */}
-    </section>
+      <FadeIn>
+        <h2 className="font-bold-slanted text-6xl md:text-8xl uppercase scroll-pt-6">
+          <PrismicText field={slice.primary.heading} />
+        </h2>
+        <div className="mb-6 max-w-4xl text-xl text-pretty">
+          <PrismicRichText field={slice.primary.description} />
+        </div>
+        
+
+        <FadeIn targetChildren className="grid grid-cols-1 gap-4 overflow-hidden sm:grid-cols-2">
+          {slice.primary.switches.map((item, key) => isFilled.contentRelationship(item.switch) ? (
+            <SharedCanvas key={key} color={item.switch} />
+          ): null )}
+        </FadeIn>
+      </FadeIn>
+    </Bounded>
   );
 };
 
 export default SwitchPlayground;
+
+
+type SharedCanvasProps = {
+  color: Content.SwitchPlaygroundSliceDefaultPrimarySwitchesItem["switch"]
+}
+
+const SharedCanvas = ({color}: SharedCanvasProps) => {
+  if(!isFilled.contentRelationship(color) || !color.data) return null
+
+  const colorName = color.uid as "red" | "brown" | "blue" | "black"
+  const {color:hexColor, name} = color.data
+  const bgColor = {
+    blue: "bg-sky-950",
+    red: "bg-red-950",
+    brown: "bg-amber-950",
+    black: "bg-gray-900"
+
+  }[colorName]
+
+  return(
+    <div className="group relative min-h-96 overflow-hidden rounded-3xl select-none">
+      <div className={clsx(
+        "font-black-slanted absolute inset-0 -z-10 grid place-items-center text-8xl uppercase",
+        bgColor
+      )}>
+        <svg className="pointer-events-none h-auto w-full"
+        viewBox="0 0 75 100"
+        >
+          <text
+           x="50%" 
+           y="50%" 
+           dominantBaseline="middle" 
+           textAnchor="middle" 
+           fontSize={18} 
+           className="font-black-slanted fill-white/30 uppercase mix-blend-overlay group-hover:fill-white/100 motion-safe:transition-all motion-safe:duration-700">
+            {
+              Array.from({length:8}, (_, i)=>(
+                <tspan key={i} x={`${(i + 1) * 10}%`} dy={i === 0 ? -40 : 14} >
+                  {colorName}
+                  {colorName}
+                  {colorName}
+                </tspan>
+              ))
+            }
+
+          </text>
+        </svg>
+
+      </div>
+    </div>
+  )
+
+}
