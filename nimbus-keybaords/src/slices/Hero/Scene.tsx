@@ -116,6 +116,34 @@ function Scene() {
                 z: 0,
                 duration: 2
             }, "<")
+            .call(() => {
+                if(!keyboard) return
+
+                const scrollTimeLine = gsap.timeline({
+                    scrollTrigger: {
+                        markers: true,
+                        trigger: ".hero",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                })
+
+
+
+                scrollTimeLine.to(keyboard.position, {
+                    x: 0,
+                    y: -0.5,
+                    z: 2.2,
+                }).to(keyboard.rotation, {
+                    x: Math.PI * -2 + 0.8,
+                    y: 0,
+                    z: 0
+                }, "<")
+
+
+
+            })
         })
     })
 
