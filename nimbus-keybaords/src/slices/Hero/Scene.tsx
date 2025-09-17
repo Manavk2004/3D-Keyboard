@@ -10,8 +10,53 @@ import * as THREE from "three"
 import gsap from "gsap"
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useFrame, useThree } from "@react-three/fiber"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
+
+
+function CameraController() {
+    const {camera, size} = useThree()
+    const mouseRef = useRef({x : .5, y: .5})
+    const targetRef = useRef(new THREE.Vector3(0, 0, 0))
+    const currentPositionRef = useRef(new THREE.Vector3(0, 0, 4))
+    const baseCameraPosition = {
+        x: 0,
+        y: 0,
+        z: 4
+    }
+
+    useFrame(() => {
+        const mouse = mouseRef.current
+        const tiltX = (mouse.y - 0.5) * .3
+        const tiltY = (mouse.x - 0.5) * .3
+
+        const targetPosition = new THREE.Vector3(baseCameraPosition.x + tiltY,
+            baseCameraPosition.y - tiltX,
+            baseCameraPosition.z
+        )
+
+        currentPositionRef.current.lerp(targetPosition, .1)
+
+        camera.position.copy(currentPositionRef.current)
+        camera.lookAt(targetRef.current)
+
+    })
+
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            mouseRef.current.x = event.clientX / size.width
+            mouseRef.current.y = event.clientY / size.height
+        }
+
+        if (typeof window !== "undefined"){
+            window.addEventListener("mousemove", handleMouseMove);
+            return () => window.removeEventListener("mousemove", handleMouseMove)
+        }
+    }, [size])
+    return null
+
+}
 
 function Scene() {
     const keyboardGroupRef = useRef<THREE.Group>(null)
@@ -86,6 +131,7 @@ function Scene() {
 
   return (
     <group>
+        <CameraController />
         <PerspectiveCamera 
             position={[0, 0, 4]}
             fov={50}
