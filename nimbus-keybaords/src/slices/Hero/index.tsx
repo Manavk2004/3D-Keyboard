@@ -9,8 +9,9 @@ import Scene from "./Scene";
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-gsap.registerPlugin(useGSAP, SplitText)
+gsap.registerPlugin(useGSAP, SplitText, ScrollTrigger)
 
 /**
  * Props for `Hero`.
@@ -47,6 +48,17 @@ const Hero: FC<HeroProps> = ({ slice }) => {
       }
       )
 
+      gsap.fromTo(".hero-scene", {
+        background: "linear-gradient(to bottom, #000000, #0f172a, #062f4a, #7fa0b9)",
+      },{
+        background: "linear-gradient(to bottom, #ffffff, #ffffff, #ffffff, #ffffff)",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "50% bottom"
+        }
+      })
+
     })
     
     mm.add("(prefers-reduced-motion: reduce", () => {
@@ -62,7 +74,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
     <section
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className="hero text-white relative h-dvh text-shadow-black/30 text-shadow-lg blue-gradient-bg motion-safe:h-[300vh]"
+      className="hero text-white relative h-dvh text-shadow-black/30 text-shadow-lg  motion-safe:h-[300vh]"
     >
       <div className=" hero-scene sticky pointer-events-none top-0 h-dvh w-full">
         <Canvas shadows="soft">

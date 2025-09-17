@@ -96,6 +96,13 @@ function Scene() {
                 ease: "power2.inOut"
             })
 
+            if (typeof window !== "undefined"){
+                const initialScrollY = window.scrollY
+                if (initialScrollY === 0){
+                    document.body.style.overflow = "hidden"
+                }
+            }
+
             tl.to(keyboard.position, {
                 x: 0,
                 y: -.5,
@@ -120,12 +127,15 @@ function Scene() {
                 duration: 2
             }, "<")
             .call(() => {
+                if (typeof window !== "undefined"){
+                    document.body.style.overflow = ""
+                }
+
                 const keycaps = keycapRef.current
                 if(!keyboard || !keycaps) return
 
                 const scrollTimeLine = gsap.timeline({
                     scrollTrigger: {
-                        markers: true,
                         trigger: ".hero",
                         start: "top top",
                         end: "bottom bottom",
