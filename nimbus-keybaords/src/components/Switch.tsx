@@ -1,7 +1,9 @@
 import * as THREE from "three";
-import React from "react";
+import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { ThreeEvent } from "@react-three/fiber";
+import gsap from "gsap"
 
 // Type definitions
 type GLTFResult = GLTF & {
@@ -21,11 +23,77 @@ type SwitchProps = React.ComponentProps<"group"> & {
 
 export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
   const { nodes } = useGLTF("/switch.gltf") as unknown as GLTFResult;
+  const switchGroupRef = useRef<THREE.Group>(null)
+  const stemRef = useRef<THREE.Mesh>(null)
+  const isPressedRef = useRef(false)
+
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation()
+
+    if(!stemRef.current || !switchGroupRef.current || isPressedRef.current) return
+    
+    
+    isPressedRef.current = true
+    
+    const stem = stemRef.current
+    const switchGroup = switchGroupRef.current
+    
+    gsap.to(switchGroup.rotation, {
+      x: Math.PI / 2 +.1,
+      duration: .05,
+      ease: "power2.out"
+    })
+
+    gsap.to(stem.position, {
+      z: 0.005,
+      duration: 0.08,
+      ease: "power2.out"
+    })
+
+  }
+
+  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation()
+
+    if(!stemRef.current || !switchGroupRef.current || !isPressedRef.current) return
+    isPressedRef.current = false
+    
+    const stem = stemRef.current
+    const switchGroup = switchGroupRef.current
+    
+    gsap.to(switchGroup.rotation, {
+      x: Math.PI / 2 ,
+      duration: .6,
+      ease: "elastic.out(1, 0.3)"
+    })
+
+    gsap.to(stem.position, {
+      z: 0,
+      duration: .15,
+      ease: "elastic.out(1, 0.3)"
+    })
+
+  }
+
+
 
   return (
     <>
       <group {...restProps}>
-        <group scale={80} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[0,0.2,0]}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerOver={() => document.body.style.cursor = "pointer"}
+          onPointerOut={() => document.body.style.cursor = "default"}
+        >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshBasicMaterial 
+            transparent
+            opacity={0}
+          />
+        </mesh>
+
+        <group ref={switchGroupRef} scale={80} rotation={[Math.PI / 2, 0, 0]}>
           {/* Switch housing */}
           <mesh
             castShadow
@@ -46,6 +114,7 @@ export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
 
           {/* Colored stem */}
           <mesh
+            ref={stemRef}
             castShadow
             receiveShadow
             geometry={nodes.Single_Switch_Mesh_3.geometry}
