@@ -69,8 +69,8 @@ const SharedCanvas = ({color}: SharedCanvasProps) => {
   return(
     <div className="group relative min-h-96 overflow-hidden rounded-3xl select-none">
       <Canvas camera={{position:[1.5, 2, 0], fov: 7}}>
-        <Stage adjustCamera intensity={.5} shadows={"contact"} environment="city">
-          <Switch rotation={[0, Math.PI / 4, 0]} color={color} hexColor={hexColor || ""}/>
+        <Stage adjustCamera intensity={2} shadows={"contact"} environment="city">
+          <Switch rotation={[0, Math.PI / 4, 0]} color={color.uid} hexColor={hexColor || ""}/>
         </Stage>
       </Canvas>
       <div className={clsx(
