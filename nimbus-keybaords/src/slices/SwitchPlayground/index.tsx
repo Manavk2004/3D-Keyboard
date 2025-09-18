@@ -8,7 +8,9 @@ import { FadeIn } from "@/components/FadeIn";
 import clsx from "clsx";
 import { Canvas } from "@react-three/fiber";
 import { Stage } from "@react-three/drei";
-import { Switch } from "@/components/Switch"
+import { SOUND_MAP, Switch } from "@/components/Switch"
+import gsap from "gsap"
+import { LuVolume2 } from "react-icons/lu";
 
 /**
  * Props for `SwitchPlayground`.
@@ -66,8 +68,23 @@ const SharedCanvas = ({color}: SharedCanvasProps) => {
 
   }[colorName]
 
+  const handleSound = () => {
+    const selectedSound = gsap.utils.random(SOUND_MAP[colorName])
+    const audio = new Audio(selectedSound)
+    audio.volume = .6
+    audio.play()
+  }
+
   return(
     <div className="group relative min-h-96 overflow-hidden rounded-3xl select-none">
+
+      <button 
+      onClick={handleSound}
+      className="font-bold-slanted absolute bottom-0 left-0 z-10 flex items-center gap-3 p-6 text-4xl text-white uppercase focus:ring-2 focus:outline-none">
+        {colorName} Max
+        <LuVolume2 />
+      </button>
+
       <Canvas camera={{position:[1.5, 2, 0], fov: 7}}>
         <Stage adjustCamera intensity={2} shadows={"contact"} environment="city">
           <Switch rotation={[0, Math.PI / 4, 0]} color={color.uid} hexColor={hexColor || ""}/>

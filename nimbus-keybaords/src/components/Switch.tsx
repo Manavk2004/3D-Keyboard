@@ -49,6 +49,7 @@ export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
     event.stopPropagation()
 
     if(!stemRef.current || !switchGroupRef.current || isPressedRef.current) return
+    isPressedRef.current = true
     
     
     isPressedRef.current = true
@@ -77,14 +78,16 @@ export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
 
   }
 
-  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation()
+  const releaseSwitch = () => {
 
     if(!stemRef.current || !switchGroupRef.current || !isPressedRef.current) return
     isPressedRef.current = false
     
     const stem = stemRef.current
     const switchGroup = switchGroupRef.current
+
+    gsap.killTweensOf(stem.position)
+    gsap.killTweensOf(switchGroup.rotation)
     
     gsap.to(switchGroup.rotation, {
       x: Math.PI / 2 ,
@@ -104,6 +107,15 @@ export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
 
   }
 
+  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    releaseSwitch
+  }
+
+  const handlePointerLeave = () => {
+    releaseSwitch()
+  }
+
 
 
   return (
@@ -111,7 +123,7 @@ export function Switch({ color, hexColor, ...restProps}: SwitchProps) {
       <group {...restProps}>
         <mesh position={[0,0.2,0]}
           onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
+          onPointerUp={handlePointerLeave}
           onPointerOver={() => document.body.style.cursor = "pointer"}
           onPointerOut={() => document.body.style.cursor = "default"}
         >
