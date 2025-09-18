@@ -1,9 +1,14 @@
+"use client";
+
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { PrismicRichText, PrismicText, SliceComponentProps } from "@prismicio/react";
 import { Bounded } from "@/components/bounded";
 import { FadeIn } from "@/components/FadeIn";
 import clsx from "clsx";
+import { Canvas } from "@react-three/fiber";
+import { Stage } from "@react-three/drei";
+import { Switch } from "@/components/Switch"
 
 /**
  * Props for `SwitchPlayground`.
@@ -63,6 +68,11 @@ const SharedCanvas = ({color}: SharedCanvasProps) => {
 
   return(
     <div className="group relative min-h-96 overflow-hidden rounded-3xl select-none">
+      <Canvas camera={{position:[1.5, 2, 0], fov: 7}}>
+        <Stage adjustCamera intensity={.5} shadows={"contact"} environment="city">
+          <Switch rotation={[0, Math.PI / 4, 0]} color={color} hexColor={hexColor || ""}/>
+        </Stage>
+      </Canvas>
       <div className={clsx(
         "font-black-slanted absolute inset-0 -z-10 grid place-items-center text-8xl uppercase",
         bgColor
